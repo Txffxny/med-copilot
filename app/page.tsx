@@ -1,65 +1,171 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useMemo } from "react";
+import { cpicPairs, Phenotype } from "@/app/data/cpic-data";
+import Accordion from "@/app/components/Accordion";
+import PopulationFrequencyChart from "@/app/components/PopulationFrequencyChart";
+
+const phenotypeLabels: Record<Phenotype, string> = {
+  poor_metabolizer: "Poor Metabolizer",
+  intermediate_metabolizer: "Intermediate Metabolizer",
+  normal_metabolizer: "Normal Metabolizer",
+  rapid_metabolizer: "Rapid Metabolizer",
+  ultrarapid_metabolizer: "Ultrarapid Metabolizer",
+};
+
+interface AnalyzeResult {
+  explanation: string;
+  source: string;
+  sourceUrl: string;
+  drugName: string;
+  gene: string;
+  phenotype: Phenotype;
+}
 
 export default function Home() {
+  const [selectedDrug, setSelectedDrug] = useState("");
+  const [selectedPhenotype, setSelectedPhenotype] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<AnalyzeResult | null>(null);
+  const [error, setError] = useState("");
+
+  const drugs = useMemo(
+    () => Array.from(new Set(cpicPairs.map((p) => p.drugName))),
+    []
+  );
+
+  const availablePhenotypes = useMemo(() => {
+    if (!selectedDrug) return [];
+    return cpicPairs
+      .filter((p) => p.drugName === selectedDrug)
+      .map((p) => p.phenotype);
+  }, [selectedDrug]);
+
+  function handleDrugChange(drug: string) {
+    setSelectedDrug(drug);
+    setSelectedPhenotype("");
+    setResult(null);
+    setError("");
+  }
+
+  async function handleSubmit() {
+    if (!selectedDrug || !selectedPhenotype) return;
+    setLoading(true);
+    setError("");
+    setResult(null);
+
+    try {
+      const res = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          drugName: selectedDrug,
+          phenotype: selectedPhenotype,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Something went wrong.");
+      } else {
+        setResult(data);
+      }
+    } catch {
+      setError("Could not reach the server. Is it still running?");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen bg-zinc-50 flex flex-col items-center px-6 py-16">
+      <div className="w-full max-w-xl">
+        <h1 className="text-2xl font-semibold text-zinc-900 mb-2">
+          Medication Safety Copilot
+        </h1>
+        <p className="text-zinc-600 mb-8">
+          Select a medication and your metabolizer status to get plain-language,
+          sourced guidance.
+        </p>
+
+        <div className="bg-white rounded-xl border border-zinc-200 p-6 space-y-5">
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1">
+              Medication
+            </label>
+            <select
+              className="w-full border border-zinc-300 rounded-lg px-3 py-2 text-zinc-900"
+              value={selectedDrug}
+              onChange={(e) => handleDrugChange(e.target.value)}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+              <option value="">Select a medication...</option>
+              {drugs.map((drug) => (
+                <option key={drug} value={drug}>
+                  {drug}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {selectedDrug && (
+            <div>
+              <label className="block text-sm font-medium text-zinc-700 mb-1">
+                Your Metabolizer Status
+              </label>
+              <select
+                className="w-full border border-zinc-300 rounded-lg px-3 py-2 text-zinc-900"
+                value={selectedPhenotype}
+                onChange={(e) => setSelectedPhenotype(e.target.value)}
+              >
+                <option value="">Select your status...</option>
+                {availablePhenotypes.map((ph) => (
+                  <option key={ph} value={ph}>
+                    {phenotypeLabels[ph]}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-zinc-400 mt-1">
+                Only statuses with established CPIC guidance for this
+                medication are shown.
+              </p>
+            </div>
+          )}
+
+          <button
+            onClick={handleSubmit}
+            disabled={!selectedDrug || !selectedPhenotype || loading}
+            className="w-full bg-zinc-900 text-white rounded-lg py-2.5 font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-zinc-800 transition-colors"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            {loading ? "Analyzing..." : "Get Guidance"}
+          </button>
         </div>
-      </main>
+
+        {error && (
+          <div className="mt-6 bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm">
+            {error}
+          </div>
+        )}
+
+        {result && (
+          <div className="mt-6 bg-white rounded-xl border border-zinc-200 p-6">
+            <div className="whitespace-pre-wrap text-zinc-800 leading-relaxed">
+              {result.explanation}
+            </div>
+            <div className="mt-5 pt-4 border-t border-zinc-100 text-sm text-zinc-500">
+              {"Source: "}
+              <a href={result.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-700">{result.source}</a>
+            </div>
+
+            <Accordion title="Learn more: how common is this?">
+              <PopulationFrequencyChart
+                gene={result.gene}
+                highlightPhenotype={result.phenotype}
+              />
+            </Accordion>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
