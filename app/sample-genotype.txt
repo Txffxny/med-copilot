@@ -1,0 +1,8 @@
+# Synthetic test data for demo purposes only — not a real person's genetic information
+# rsid	chromosome	position	genotype
+rs3892097	22	42130692	AG
+rs4244285	10	94781859	GG
+rs12248560	10	94761900	CC
+rs1799853	10	96702047	CC
+rs1057910	10	96741053	AA
+rs4149056	12	21331549	TC
