@@ -4,6 +4,8 @@ import { useState, useMemo } from "react";
 import { cpicPairs, Phenotype } from "@/app/data/cpic-data";
 import Accordion from "@/app/components/Accordion";
 import PopulationFrequencyChart from "@/app/components/PopulationFrequencyChart";
+import Disclaimer from "@/app/components/Disclaimer";
+import GenotypeUpload from "@/app/components/GenotypeUpload";
 
 const phenotypeLabels: Record<Phenotype, string> = {
   poor_metabolizer: "Poor Metabolizer",
@@ -81,12 +83,39 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-zinc-50 flex flex-col items-center px-6 py-16">
       <div className="w-full max-w-xl">
+        <Disclaimer />
+
         <h1 className="text-2xl font-semibold text-zinc-900 mb-2">
           Medication Safety Copilot
         </h1>
         <p className="text-zinc-600 mb-8">
-          Select a medication and your metabolizer status to get plain-language,
-          sourced guidance.
+          Check how your genetics may affect how you respond to common
+          medications.
+        </p>
+
+        <div className="mb-3">
+          <span className="inline-block text-xs font-semibold uppercase tracking-wide text-zinc-500 bg-zinc-200 rounded-full px-3 py-1">
+            Option 1
+          </span>
+        </div>
+        <GenotypeUpload />
+
+        <div className="flex items-center gap-3 my-8">
+          <div className="flex-1 h-px bg-zinc-200" />
+          <span className="text-xs text-zinc-400 uppercase tracking-wide">
+            or
+          </span>
+          <div className="flex-1 h-px bg-zinc-200" />
+        </div>
+
+        <div className="mb-3">
+          <span className="inline-block text-xs font-semibold uppercase tracking-wide text-zinc-500 bg-zinc-200 rounded-full px-3 py-1">
+            Option 2
+          </span>
+        </div>
+        <p className="text-sm text-zinc-600 mb-4">
+          Don&apos;t have a genetic test file? Enter your metabolizer status
+          manually if you already know it.
         </p>
 
         <div className="bg-white rounded-xl border border-zinc-200 p-6 space-y-5">

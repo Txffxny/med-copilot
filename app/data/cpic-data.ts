@@ -30,6 +30,18 @@ export const cpicPairs: GeneDrugPair[] = [
     sourceUrl: "https://cpicpgx.org/guidelines/guideline-for-codeine-and-cyp2d6/",
   },
   {
+    id: "codeine-cyp2d6-intermediate",
+    drugName: "Codeine",
+    gene: "CYP2D6",
+    phenotype: "intermediate_metabolizer",
+    summary:
+      "Intermediate CYP2D6 metabolizers convert codeine to morphine less efficiently than normal, which may result in reduced pain relief for some people.",
+    action:
+      "Tell your doctor or pharmacist about this result — they may want to monitor how well codeine is working for you or consider an alternative if it isn't providing enough relief.",
+    source: "CPIC Guideline for Codeine and CYP2D6 (2021 update)",
+    sourceUrl: "https://cpicpgx.org/guidelines/guideline-for-codeine-and-cyp2d6/",
+  },
+  {
     id: "codeine-cyp2d6-normal",
     drugName: "Codeine",
     gene: "CYP2D6",
@@ -66,6 +78,18 @@ export const cpicPairs: GeneDrugPair[] = [
     sourceUrl: "https://cpicpgx.org/guidelines/guideline-for-clopidogrel-and-cyp2c19/",
   },
   {
+    id: "clopidogrel-cyp2c19-intermediate",
+    drugName: "Clopidogrel",
+    gene: "CYP2C19",
+    phenotype: "intermediate_metabolizer",
+    summary:
+      "Intermediate CYP2C19 metabolizers activate clopidogrel less efficiently than normal, which may reduce how well it prevents blood clots.",
+    action:
+      "Ask your doctor whether an alternative antiplatelet medication (such as prasugrel or ticagrelor) might be more effective for you.",
+    source: "CPIC Guideline for Clopidogrel and CYP2C19 (2022 update)",
+    sourceUrl: "https://cpicpgx.org/guidelines/guideline-for-clopidogrel-and-cyp2c19/",
+  },
+  {
     id: "clopidogrel-cyp2c19-normal",
     drugName: "Clopidogrel",
     gene: "CYP2C19",
@@ -78,6 +102,30 @@ export const cpicPairs: GeneDrugPair[] = [
     sourceUrl: "https://cpicpgx.org/guidelines/guideline-for-clopidogrel-and-cyp2c19/",
   },
   {
+    id: "clopidogrel-cyp2c19-rapid",
+    drugName: "Clopidogrel",
+    gene: "CYP2C19",
+    phenotype: "rapid_metabolizer",
+    summary:
+      "Rapid CYP2C19 metabolizers activate clopidogrel faster than normal. Current guidance treats this similarly to normal function for clopidogrel specifically.",
+    action:
+      "No special precaution generally needed for clopidogrel, but mention this result to your doctor as it may be relevant for other medications too.",
+    source: "CPIC Guideline for Clopidogrel and CYP2C19 (2022 update)",
+    sourceUrl: "https://cpicpgx.org/guidelines/guideline-for-clopidogrel-and-cyp2c19/",
+  },
+  {
+    id: "clopidogrel-cyp2c19-ultrarapid",
+    drugName: "Clopidogrel",
+    gene: "CYP2C19",
+    phenotype: "ultrarapid_metabolizer",
+    summary:
+      "Ultrarapid CYP2C19 metabolizers activate clopidogrel very efficiently. This is not generally associated with reduced effectiveness for clopidogrel.",
+    action:
+      "No special precaution generally needed for clopidogrel, but mention this result to your doctor as it may be relevant for other medications too.",
+    source: "CPIC Guideline for Clopidogrel and CYP2C19 (2022 update)",
+    sourceUrl: "https://cpicpgx.org/guidelines/guideline-for-clopidogrel-and-cyp2c19/",
+  },
+  {
     id: "simvastatin-slco1b1-poor",
     drugName: "Simvastatin",
     gene: "SLCO1B1",
@@ -86,6 +134,18 @@ export const cpicPairs: GeneDrugPair[] = [
       "Reduced SLCO1B1 transporter function can cause simvastatin to build up in the blood, substantially raising the risk of muscle pain and damage (myopathy).",
     action:
       "Ask your doctor about a lower dose, a different statin, or extra monitoring for muscle symptoms like unexplained pain or weakness.",
+    source: "CPIC Guideline for Simvastatin and SLCO1B1 (2022 update)",
+    sourceUrl: "https://cpicpgx.org/guidelines/guideline-for-simvastatin-and-slco1b1/",
+  },
+  {
+    id: "simvastatin-slco1b1-intermediate",
+    drugName: "Simvastatin",
+    gene: "SLCO1B1",
+    phenotype: "intermediate_metabolizer",
+    summary:
+      "Decreased SLCO1B1 transporter function means simvastatin may build up somewhat more than usual, moderately raising the risk of muscle-related side effects.",
+    action:
+      "Ask your doctor whether a lower dose or extra monitoring for muscle symptoms would be appropriate for you.",
     source: "CPIC Guideline for Simvastatin and SLCO1B1 (2022 update)",
     sourceUrl: "https://cpicpgx.org/guidelines/guideline-for-simvastatin-and-slco1b1/",
   },
@@ -110,6 +170,18 @@ export const cpicPairs: GeneDrugPair[] = [
       "Poor CYP2C9 metabolizers clear warfarin more slowly, increasing the risk of excessive blood thinning and bleeding at standard doses.",
     action:
       "Ask your doctor about starting at a lower dose and monitoring your INR (blood clotting test) more closely than usual.",
+    source: "CPIC Guideline for Warfarin (2017 update)",
+    sourceUrl: "https://cpicpgx.org/guidelines/guideline-for-warfarin-and-cyp2c9-cyp4f2-vkorc1/",
+  },
+  {
+    id: "warfarin-cyp2c9-intermediate",
+    drugName: "Warfarin",
+    gene: "CYP2C9",
+    phenotype: "intermediate_metabolizer",
+    summary:
+      "Intermediate CYP2C9 metabolizers clear warfarin somewhat more slowly than normal, moderately increasing bleeding risk at standard doses.",
+    action:
+      "Ask your doctor about a modestly reduced starting dose and slightly closer INR monitoring than usual.",
     source: "CPIC Guideline for Warfarin (2017 update)",
     sourceUrl: "https://cpicpgx.org/guidelines/guideline-for-warfarin-and-cyp2c9-cyp4f2-vkorc1/",
   },
