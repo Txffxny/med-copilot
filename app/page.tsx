@@ -9,6 +9,7 @@ import GenotypeUpload from "@/app/components/GenotypeUpload";
 import FurtherReading from "@/app/components/FurtherReading";
 import ListenButton from "@/app/components/ListenButton";
 import { splitExplanation } from "@/app/lib/splitExplanation";
+import { renderMarkdown } from "@/app/lib/renderMarkdown";
 
 const phenotypeLabels: Record<Phenotype, string> = {
   poor_metabolizer: "Poor Metabolizer",
@@ -190,7 +191,7 @@ export default function Home() {
               <ListenButton text={split.summary} label="Listen" />
             </div>
             <div className="whitespace-pre-wrap text-zinc-800 leading-relaxed mb-5">
-              {split.summary}
+              {renderMarkdown(split.summary)}
             </div>
 
             {split.action && (
@@ -202,7 +203,7 @@ export default function Home() {
                   <ListenButton text={split.action} label="Listen" />
                 </div>
                 <div className="whitespace-pre-wrap text-zinc-800 leading-relaxed">
-                  {split.action}
+                  {renderMarkdown(split.action)}
                 </div>
               </>
             )}

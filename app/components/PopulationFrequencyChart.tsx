@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Phenotype } from "@/app/data/cpic-data";
 
 type FreqEntry = { phenotype: Phenotype; label: string; pct: number; color: string };
@@ -47,11 +50,21 @@ const geneFrequencies: Record<string, { entries: FreqEntry[]; source: string; so
   },
 };
 
-export default function PopulationFrequencyChart(props: {
+export default function PopulationFrequencyChart({
+  gene,
+  highlightPhenotype,
+}: {
   gene: string;
   highlightPhenotype: Phenotype;
 }) {
-  const data = geneFrequencies[props.gene];
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setMounted(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const data = geneFrequencies[gene];
   if (!data) return null;
 
   return (
@@ -61,16 +74,30 @@ export default function PopulationFrequencyChart(props: {
       </p>
       <div className="space-y-2">
         {data.entries.map((entry) => {
-          const isYou = entry.phenotype === props.highlightPhenotype;
+          const isYou = entry.phenotype === highlightPhenotype;
           return (
             <div key={entry.phenotype} className="flex items-center gap-3">
-              <span className={"w-24 text-xs shrink-0 " + (isYou ? "font-semibold text-zinc-900" : "text-zinc-500")}>
-                {entry.label}{isYou ? " (you)" : ""}
+              <span
+                className={`w-24 text-xs shrink-0 ${
+                  isYou ? "font-semibold text-zinc-900" : "text-zinc-500"
+                }`}
+              >
+                {entry.label}
+                {isYou ? " (you)" : ""}
               </span>
               <div className="flex-1 bg-zinc-100 rounded h-4 overflow-hidden">
-                <div className="h-full rounded" style={{ width: entry.pct + "%", backgroundColor: entry.color, opacity: isYou ? 1 : 0.5 }} />
+                <div
+                  className="h-full rounded transition-all duration-700 ease-out"
+                  style={{
+                    width: mounted ? `${entry.pct}%` : "0%",
+                    backgroundColor: entry.color,
+                    opacity: isYou ? 1 : 0.5,
+                  }}
+                />
               </div>
-              <span className="w-10 text-xs text-zinc-500 text-right">{entry.pct}%</span>
+              <span className="w-10 text-xs text-zinc-500 text-right">
+                {entry.pct}%
+              </span>
             </div>
           );
         })}

@@ -9,6 +9,7 @@ import ProcessingExplainer from "@/app/components/ProcessingExplainer";
 import FurtherReading from "@/app/components/FurtherReading";
 import ListenButton from "@/app/components/ListenButton";
 import { splitExplanation } from "@/app/lib/splitExplanation";
+import { renderMarkdown } from "@/app/lib/renderMarkdown";
 
 interface UploadResult {
   gene: string;
@@ -173,7 +174,7 @@ export default function GenotypeUpload() {
                       <ListenButton text={split.summary} label="Listen" />
                     </div>
                     <div className="whitespace-pre-wrap text-sm text-zinc-800 leading-relaxed mb-4">
-                      {split.summary}
+                      {renderMarkdown(split.summary)}
                     </div>
 
                     {split.action && (
@@ -185,7 +186,7 @@ export default function GenotypeUpload() {
                           <ListenButton text={split.action} label="Listen" />
                         </div>
                         <div className="whitespace-pre-wrap text-sm text-zinc-800 leading-relaxed">
-                          {split.action}
+                          {renderMarkdown(split.action)}
                         </div>
                       </>
                     )}
