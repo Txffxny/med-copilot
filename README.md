@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Medication Safety Copilot
 
-## Getting Started
+A pharmacogenomic medication safety tool that translates genetic test results into clear, sourced, actionable guidance — built for the Juno "Build the Future of Healthcare" Hackathon (July 2026).
 
-First, run the development server:
+**Live demo:** https://med-copilot-roan.vercel.app
+
+---
+
+## ⚠️ Important disclaimer
+
+This is an educational prototype, **not medical advice**. It does not replace a full clinical pharmacogenomic test or a conversation with your doctor or pharmacist. See the in-app "How is my data actually processed?" section for a full breakdown of this tool's methodology and limitations.
+
+## What it does
+
+1. **Upload your genetic data** (23andMe-style raw `.txt` file) or manually enter a known metabolizer status
+2. The app checks your genotype against a small set of well-established pharmacogenomic markers (CYP2D6, CYP2C19, CYP2C9, SLCO1B1)
+3. Your estimated metabolizer status is matched against real **CPIC clinical guidelines** — never guessed
+4. Claude rephrases the matched guideline into plain, patient-friendly language (it cannot introduce information beyond the matched guideline)
+5. Every result includes: the source citation, a population-frequency comparison chart, links to peer-reviewed literature, and a split, speed-adjustable audio read-aloud (via ElevenLabs)
+
+## Why this design
+
+Most consumer genetic tools either stop at ancestry/traits or risk free-text AI interpretation of raw genetic data with no grounding. This tool is built around a **verified lookup layer**: the AI only ever rephrases a pre-matched, real clinical guideline — if there's no verified match, it says so rather than guessing.
+
+## Supported genes & medications
+
+| Gene | Medication |
+|------|-----------|
+| CYP2D6 | Codeine |
+| CYP2C19 | Clopidogrel |
+| CYP2C9 | Warfarin |
+| SLCO1B1 | Simvastatin |
+
+## Tech stack
+
+- **Next.js 16** (App Router, Turbopack)
+- **Anthropic Claude** (Sonnet) for plain-language rephrasing
+- **ElevenLabs** for audio read-aloud
+- **Tailwind CSS**
+- Deployed on **Vercel**
+
+## Try it without your own data
+
+A synthetic sample genotype file (not real genetic data) is available here for testing:
+`sample-genotype.txt` in this repo, or [raw link](https://raw.githubusercontent.com/Txffxny/med-copilot/main/app/sample-genotype.txt)
+
+## Known limitations
+
+- Uses single-marker (tag SNP) estimates, not full clinical haplotype phasing
+- Does not detect CYP2D6 copy-number variation (duplications/deletions)
+- Covers only 4 genes and 4 medications — not a comprehensive panel
+- Population frequency data are approximate and ancestry-averaged
+
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Requires a `.env.local` file with:
+ANTHROPIC_API_KEY=your_key_here
+ELEVENLABS_API_KEY=your_key_here
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Roadmap
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- NHS-backed sourcing alongside CPIC guidelines
+- Printable "for your GP" summary view
+- Expanded gene/medication coverage
