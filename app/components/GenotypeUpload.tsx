@@ -6,6 +6,7 @@ import { cpicPairs, Phenotype } from "@/app/data/cpic-data";
 import Accordion from "@/app/components/Accordion";
 import PopulationFrequencyChart from "@/app/components/PopulationFrequencyChart";
 import ProcessingExplainer from "@/app/components/ProcessingExplainer";
+import FurtherReading from "@/app/components/FurtherReading";
 
 interface UploadResult {
   gene: string;
@@ -173,6 +174,8 @@ export default function GenotypeUpload() {
                   <Accordion title="Learn more: how common is this?">
                     <PopulationFrequencyChart gene={r.gene} highlightPhenotype={r.phenotype} />
                   </Accordion>
+
+                  <FurtherReading gene={r.gene} />
                 </div>
               )}
             </div>

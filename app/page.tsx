@@ -6,6 +6,7 @@ import Accordion from "@/app/components/Accordion";
 import PopulationFrequencyChart from "@/app/components/PopulationFrequencyChart";
 import Disclaimer from "@/app/components/Disclaimer";
 import GenotypeUpload from "@/app/components/GenotypeUpload";
+import FurtherReading from "@/app/components/FurtherReading";
 
 const phenotypeLabels: Record<Phenotype, string> = {
   poor_metabolizer: "Poor Metabolizer",
@@ -192,6 +193,8 @@ export default function Home() {
                 highlightPhenotype={result.phenotype}
               />
             </Accordion>
+
+            <FurtherReading gene={result.gene} />
           </div>
         )}
       </div>
