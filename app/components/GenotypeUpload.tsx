@@ -5,6 +5,7 @@ import { parseRawGenotypeFile, GenotypeCall } from "@/app/data/genotype-map";
 import { cpicPairs, Phenotype } from "@/app/data/cpic-data";
 import Accordion from "@/app/components/Accordion";
 import PopulationFrequencyChart from "@/app/components/PopulationFrequencyChart";
+import ProcessingExplainer from "@/app/components/ProcessingExplainer";
 
 interface UploadResult {
   gene: string;
@@ -115,6 +116,8 @@ export default function GenotypeUpload() {
           className="block w-full text-sm text-zinc-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-zinc-900 file:text-white hover:file:bg-zinc-800 file:cursor-pointer"
         />
       </label>
+
+      <ProcessingExplainer />
 
       {fileName && (
         <p className="text-xs text-zinc-400 mt-2">
