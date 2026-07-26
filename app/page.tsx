@@ -7,6 +7,8 @@ import PopulationFrequencyChart from "@/app/components/PopulationFrequencyChart"
 import Disclaimer from "@/app/components/Disclaimer";
 import GenotypeUpload from "@/app/components/GenotypeUpload";
 import FurtherReading from "@/app/components/FurtherReading";
+import ListenButton from "@/app/components/ListenButton";
+import { splitExplanation } from "@/app/lib/splitExplanation";
 
 const phenotypeLabels: Record<Phenotype, string> = {
   poor_metabolizer: "Poor Metabolizer",
@@ -80,6 +82,8 @@ export default function Home() {
       setLoading(false);
     }
   }
+
+  const split = result ? splitExplanation(result.explanation) : null;
 
   return (
     <div className="min-h-screen bg-zinc-50 flex flex-col items-center px-6 py-16">
@@ -177,11 +181,32 @@ export default function Home() {
           </div>
         )}
 
-        {result && (
+        {result && split && (
           <div className="mt-6 bg-white rounded-xl border border-zinc-200 p-6">
-            <div className="whitespace-pre-wrap text-zinc-800 leading-relaxed">
-              {result.explanation}
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
+                What this means
+              </p>
+              <ListenButton text={split.summary} label="Listen" />
             </div>
+            <div className="whitespace-pre-wrap text-zinc-800 leading-relaxed mb-5">
+              {split.summary}
+            </div>
+
+            {split.action && (
+              <>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
+                    What to do
+                  </p>
+                  <ListenButton text={split.action} label="Listen" />
+                </div>
+                <div className="whitespace-pre-wrap text-zinc-800 leading-relaxed">
+                  {split.action}
+                </div>
+              </>
+            )}
+
             <div className="mt-5 pt-4 border-t border-zinc-100 text-sm text-zinc-500">
               {"Source: "}
               <a href={result.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-700">{result.source}</a>

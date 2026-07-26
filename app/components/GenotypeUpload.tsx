@@ -7,6 +7,8 @@ import Accordion from "@/app/components/Accordion";
 import PopulationFrequencyChart from "@/app/components/PopulationFrequencyChart";
 import ProcessingExplainer from "@/app/components/ProcessingExplainer";
 import FurtherReading from "@/app/components/FurtherReading";
+import ListenButton from "@/app/components/ListenButton";
+import { splitExplanation } from "@/app/lib/splitExplanation";
 
 interface UploadResult {
   gene: string;
@@ -143,43 +145,67 @@ export default function GenotypeUpload() {
 
       {results.length > 0 && (
         <div className="mt-6 space-y-4">
-          {results.map((r) => (
-            <div key={r.gene} className="border border-zinc-200 rounded-lg p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-zinc-900">
-                  {r.drugName} ({r.gene})
-                </span>
-                <span className="text-xs text-zinc-400">
-                  {"Raw call: "}
-                  {r.rawGenotype}
-                </span>
-              </div>
-              <p className="text-xs text-zinc-400 mb-3">{r.note}</p>
-
-              {r.loading && <p className="text-sm text-zinc-500">Analyzing...</p>}
-
-              {r.error && <p className="text-sm text-red-600">{r.error}</p>}
-
-              {r.explanation && (
-                <div>
-                  <div className="whitespace-pre-wrap text-sm text-zinc-800 leading-relaxed">
-                    {r.explanation}
-                  </div>
-                  {r.sourceUrl && r.source && (
-                    <div className="mt-3 pt-3 border-t border-zinc-100 text-xs text-zinc-500">
-                      {"Source: "}
-                      <a href={r.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-700">{r.source}</a>
-                    </div>
-                  )}
-                  <Accordion title="Learn more: how common is this?">
-                    <PopulationFrequencyChart gene={r.gene} highlightPhenotype={r.phenotype} />
-                  </Accordion>
-
-                  <FurtherReading gene={r.gene} />
+          {results.map((r) => {
+            const split = r.explanation ? splitExplanation(r.explanation) : null;
+            return (
+              <div key={r.gene} className="border border-zinc-200 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-semibold text-zinc-900">
+                    {r.drugName} ({r.gene})
+                  </span>
+                  <span className="text-xs text-zinc-400">
+                    {"Raw call: "}
+                    {r.rawGenotype}
+                  </span>
                 </div>
-              )}
-            </div>
-          ))}
+                <p className="text-xs text-zinc-400 mb-3">{r.note}</p>
+
+                {r.loading && <p className="text-sm text-zinc-500">Analyzing...</p>}
+
+                {r.error && <p className="text-sm text-red-600">{r.error}</p>}
+
+                {split && (
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                      <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
+                        What this means
+                      </p>
+                      <ListenButton text={split.summary} label="Listen" />
+                    </div>
+                    <div className="whitespace-pre-wrap text-sm text-zinc-800 leading-relaxed mb-4">
+                      {split.summary}
+                    </div>
+
+                    {split.action && (
+                      <>
+                        <div className="flex items-center justify-between gap-2 mb-1.5">
+                          <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
+                            What to do
+                          </p>
+                          <ListenButton text={split.action} label="Listen" />
+                        </div>
+                        <div className="whitespace-pre-wrap text-sm text-zinc-800 leading-relaxed">
+                          {split.action}
+                        </div>
+                      </>
+                    )}
+
+                    {r.sourceUrl && r.source && (
+                      <div className="mt-3 pt-3 border-t border-zinc-100 text-xs text-zinc-500">
+                        {"Source: "}
+                        <a href={r.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-700">{r.source}</a>
+                      </div>
+                    )}
+                    <Accordion title="Learn more: how common is this?">
+                      <PopulationFrequencyChart gene={r.gene} highlightPhenotype={r.phenotype} />
+                    </Accordion>
+
+                    <FurtherReading gene={r.gene} />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
